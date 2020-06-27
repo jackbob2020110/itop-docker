@@ -28,7 +28,7 @@ RUN rm -rf /var/www/html/* \
     && rm -rf /tmp/itop
 
 # Copy services, configs and scripts
-COPY service /etc/service/
+ADD service /etc/service/
 COPY artifacts/scripts /
 COPY artifacts/itop-cron.logrotate /etc/logrotate.d/itop-cron
 COPY artifacts/apache2.fqdn.conf /etc/apache2/conf-available/fqdn.conf
