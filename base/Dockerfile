@@ -1,50 +1,51 @@
-FROM phusion/baseimage
-MAINTAINER Vladimir Kunin <vladimir@knowitop.ru>
+FROM ubuntu:xenial
+MAINTAINER Jack
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG ITOP_VERSION=2.7.0-1
-ARG ITOP_FILENAME=iTop-2.7.0-1-5541.zip
 
-RUN apt-get install -y software-properties-common \
+# Install Networktools
+RUN apt-get update \
+    && apt-get -y install net-tools \
+    && apt-get -y install iputils-ping
+
+# Install APACHE2
+RUN apt-get update \
+    && apt-get install -y apache2
+
+# Install PHP7
+RUN apt-get install -y language-pack-en-base \
+    && export LC_ALL=en_US.UTF-8 \
+    && export LANG=en_US.UTF-8 \
+#    && apt-key adv --recv-keys 94558F59 --keyserver hkp://keyserver.ubuntu.com:80  \
+    && apt-get install -y software-properties-common \
     && add-apt-repository -y ppa:ondrej/php \
     && apt-get update \
-    && apt-get install -y \
-        apache2 \
-        php7.3 php7.3-xml php7.3-mysql php7.3-json php7.3-mbstring php7.3-ldap php7.3-soap php7.3-zip php7.3-gd php-apcu \
-        graphviz \
-        curl \
-        unzip\
-        git \
-    && apt-get clean \
+    && apt-get install -y php7.4 \
+    && apt-get install -y php7.4-xml php7.4-mysql php7.4-json php7.4-mbstring php7.4-ldap php7.4-soap php7.4-zip php7.4-gd php-apcu graphviz curl unzip git \
+&& apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --set php /usr/bin/php7.3
+    && update-alternatives --set php /usr/bin/php7.4
 
-# Get iTop
-RUN rm -rf /var/www/html/* \
-    && mkdir -p /tmp/itop \
-    && curl -SL -o /tmp/itop/itop.zip https://sourceforge.net/projects/itop/files/itop/$ITOP_VERSION/$ITOP_FILENAME/download \
-    && unzip /tmp/itop/itop.zip -d /tmp/itop/ \
-    && mv /tmp/itop/web/* /var/www/html \
-    && rm -rf /tmp/itop
 
-# Copy services, configs and scripts
-ADD service /etc/service/
-COPY artifacts/scripts /
-COPY artifacts/itop-cron.logrotate /etc/logrotate.d/itop-cron
-COPY artifacts/apache2.fqdn.conf /etc/apache2/conf-available/fqdn.conf
-COPY run.sh /run.sh
-RUN chmod +x -R /etc/service \
-    && chmod +x /*.sh \
-    && a2enconf fqdn
+ADD tz.php /var/www/html
+ADD itop-cron.logrotate /etc/logrotate.d/itop-cron
+ADD apache2.fqdn.conf /etc/apache2/conf-available/fqdn.conf
 
-# Create shortcuts for the right management scripts, get latest Russian translations and fix rights
-RUN ln -s /make-itop-config-writable.sh /usr/local/bin/conf-w \
-    && ln -s /make-itop-config-read-only.sh /usr/local/bin/conf-ro \
-    && /update-russian-translations.sh \
-    && chown -R www-data:www-data /var/www/html
+# Configure apache
+RUN a2enmod rewrite
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 777 /var/www/html
+
+ENV APACHE_RUN_USER  www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_PID_FILE  /var/run/apache2/apache2.pid
+ENV APACHE_RUN_DIR   /var/run/apache2
+ENV APACHE_LOCK_DIR  /var/lock/apache2
+ENV APACHE_LOG_DIR   /var/log/apache2
+
+RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
+
+
 
 EXPOSE 80
-
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1
-
-ENTRYPOINT ["/run.sh"]
+CMD ["/usr/sbin/apache2", "-D",  "FOREGROUND"]
