@@ -19,7 +19,6 @@ RUN apt-get install -y software-properties-common \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --set php /usr/bin/php7.3
 
-# Get iTop
 RUN rm -rf /var/www/html/* \
     && mkdir -p /tmp/itop \
     && curl -SL -o /tmp/itop/itop.zip https://sourceforge.net/projects/itop/files/itop/$ITOP_VERSION/$ITOP_FILENAME/download \
@@ -27,7 +26,7 @@ RUN rm -rf /var/www/html/* \
     && mv /tmp/itop/web/* /var/www/html \
     && rm -rf /tmp/itop
 
-# Copy services, configs and scripts
+
 COPY service /etc/service/
 COPY artifacts/scripts /
 COPY artifacts/itop-cron.logrotate /etc/logrotate.d/itop-cron
@@ -37,7 +36,7 @@ RUN chmod +x -R /etc/service \
     && chmod +x /*.sh \
     && a2enconf fqdn
 
-# Create shortcuts for the right management scripts, get latest Russian translations and fix rights
+
 RUN ln -s /make-itop-config-writable.sh /usr/local/bin/conf-w \
     && ln -s /make-itop-config-read-only.sh /usr/local/bin/conf-ro \
     && /update-russian-translations.sh \
