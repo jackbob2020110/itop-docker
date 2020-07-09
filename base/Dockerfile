@@ -27,7 +27,7 @@ RUN apt-get install -y language-pack-en-base \
     && update-alternatives --set php /usr/bin/php7.4
 
 
-ADD tz.php /var/www/html
+#ADD tz.php /var/www/html
 ADD itop-cron.logrotate /etc/logrotate.d/itop-cron
 ADD apache2.fqdn.conf /etc/apache2/conf-available/fqdn.conf
 
