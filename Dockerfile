@@ -27,8 +27,7 @@ RUN apt-get install -y language-pack-en-base \
 && apt-get install -y  php-pear php-net-socket php-imap \
 && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --set php /usr/bin/php7.4 \
-    && rm -rf /var/www/html/*
+    && update-alternatives --set php /usr/bin/php7.4
 
 ADD tz.php /var/www/html
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
