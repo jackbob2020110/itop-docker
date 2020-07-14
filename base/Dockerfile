@@ -33,7 +33,7 @@ ADD tz.php /var/www/html
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
 && a2enconf fqdn
 
-ADD services.sh /
+ADD ./services.sh /
 RUN chmod +x /*.sh \
 && chmod -R 755 /var/www/html \
 && chown -R www-data:www-data /var/www/html
