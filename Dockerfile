@@ -45,10 +45,14 @@ ADD tz.php /var/www/html
 RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
 && a2enconf fqdn
 
-ADD services.sh /
+ADD scripts /
 RUN chmod +x /*.sh \
 && chmod -R 755 /var/www/html \
 && chown -R www-data:www-data /var/www/html
+
+RUN ln -s /make-itop-config-writable.sh /usr/local/bin/conf-w \
+    && ln -s /make-itop-config-read-only.sh /usr/local/bin/conf-ro
+    
 
 EXPOSE 80 443
 
