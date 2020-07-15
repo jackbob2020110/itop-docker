@@ -41,14 +41,15 @@ RUN rm -rf /var/www/html/* \
     && mv /tmp/itop/web/* /var/www/html \
     && rm -rf /tmp/itop
 
-ADD tz.php /var/www/html
-RUN echo "ServerName localhost" > /etc/apache2/conf-available/fqdn.conf \
-&& a2enconf fqdn
-
-ADD scripts /
+# COPY services, configs and scripts
+COPY scripts /
+COPY options/webtz.php /var/www/html
+COPY options/itop-cron.logrotate /etc/logrotate.d/itop-cron
+COPY options/apache2.fqdn.conf /etc/apache2/conf-available/fqdn.conf
 RUN chmod +x /*.sh \
-&& chmod -R 755 /var/www/html \
-&& chown -R www-data:www-data /var/www/html
+   && a2enconf fqdn \
+   && chmod -R 755 /var/www/html \
+   && chown -R www-data:www-data /var/www/html
 
 RUN ln -s /make-itop-config-writable.sh /usr/local/bin/conf-w \
     && ln -s /make-itop-config-read-only.sh /usr/local/bin/conf-ro
