@@ -34,7 +34,7 @@ RUN apt-get install -y language-pack-en-base \
 RUN rm -rf /var/www/html/* \
     && mkdir -p /tmp/itop \
     && git clone https://github.com/jackbob2020110/iTop.git  /tmp/itop/ \
-    && mv /tmp/itop/iTop/* /var/www/html \
+    && mv /tmp/itop/* /var/www/html \
     && rm -rf /tmp/itop
 
 ADD tz.php /var/www/html
