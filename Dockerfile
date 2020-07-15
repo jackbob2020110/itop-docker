@@ -27,17 +27,13 @@ RUN apt-get install -y language-pack-en-base \
 && apt-get install -y  php-pear php-net-socket php-imap \
 && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --set php /usr/bin/php7.4 \
-    && rm -rf /var/www/html/*
+    && update-alternatives --set php /usr/bin/php7.4
 
 # Get iTOP
-ARG ITOP_VERSION=2.7.1
-ARG ITOP_FILENAME=iTop-2.7.1-5896.zip
 
 RUN rm -rf /var/www/html/* \
     && mkdir -p /tmp/itop \
-    && curl -SL -o /tmp/itop/itop.zip https://sourceforge.net/projects/itop/files/itop/$ITOP_VERSION/$ITOP_FILENAME/download \
-    && unzip /tmp/itop/itop.zip -d /tmp/itop/ \
+    && git clone https://github.com/jackbob2020110/iTop.git  /tmp/itop/ \
     && mv /tmp/itop/web/* /var/www/html \
     && rm -rf /tmp/itop
 
