@@ -1,23 +1,23 @@
 FROM phusion/baseimage
-MAINTAINER Vladimir Kunin <vladimir@knowitop.ru>
+MAINTAINER jack
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG ITOP_VERSION=2.6.1
-ARG ITOP_FILENAME=iTop-2.6.1-4463.zip
+ARG ITOP_VERSION=2.7.4
+ARG ITOP_FILENAME=iTop-2.7.4-5896.zip
 
 RUN apt-get install -y software-properties-common \
     && add-apt-repository -y ppa:ondrej/php \
     && apt-get update \
     && apt-get install -y \
         apache2 \
-        php7.1 php7.1-xml php7.1-mysql php7.1-json php7.1-mcrypt php7.1-mbstring php7.1-ldap php7.1-soap php7.1-zip php7.1-gd php-apcu \
+        php7.4 php7.4-xml php7.4-mysql php7.4-json php7.4-mcrypt php7.4-mbstring php7.4-ldap php7.4-soap php7.4-zip php7.4-gd php-apcu \
         graphviz \
         curl \
         unzip\
         git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --set php /usr/bin/php7.1
+    && update-alternatives --set php /usr/bin/php7.4
 
 # Get iTop
 RUN rm -rf /var/www/html/* \
