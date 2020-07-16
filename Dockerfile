@@ -1,5 +1,5 @@
-FROM vbkunin/itop:2.7.0-base
-MAINTAINER Vladimir Kunin <vladimir@knowitop.ru>
+FROM ubuntu:16.04
+MAINTAINER jack
 
 RUN apt-get update && apt-get install -y software-properties-common \
     && apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8 \
