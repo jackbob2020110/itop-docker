@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-service cron restart
+service cron start
 exec /usr/sbin/apachectl -DNO_DETACH -k start
 

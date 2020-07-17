@@ -55,7 +55,7 @@ RUN ln -s /make-itop-config-writable.sh /usr/local/bin/conf-w \
     && ln -s /make-itop-config-read-only.sh /usr/local/bin/conf-ro
     
 
-EXPOSE 80 443
+EXPOSE 80
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -f http://localhost/ || exit 1
 
